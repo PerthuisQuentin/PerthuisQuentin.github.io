@@ -120,16 +120,16 @@ window.onload = function()
 	// Evenement au changement de la valeur du slider
 	slider.addEventListener("change", 
 		function(e) {
-			setBallAmount(e.srcElement.value);
-			input.value = e.srcElement.value;
+			setBallAmount(e.target.value);
+			input.value = e.target.value;
 		}
 	);
 	
 	// Evenement au changement de la valeur de l'input
 	input.addEventListener("change",
 		function(e) {
-			setBallAmount(e.srcElement.value);
-			slider.value = e.srcElement.value;
+			setBallAmount(e.target.value);
+			slider.value = e.target.value;
 		}
 	);
 	

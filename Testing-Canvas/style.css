@@ -1,6 +1,19 @@
-canvas {
+body {
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+#balls_canvas {
 	padding: 0;
 	margin: auto;
 	display: block;
 	border: 1px solid black;
+}
+
+
+#balls_slider {
+	padding-top: 5px;
+	width: 100%;
+	margin: auto;
+	display: block;
 }

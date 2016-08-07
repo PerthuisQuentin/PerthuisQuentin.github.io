@@ -3,7 +3,7 @@ window.onload = function()
 	ResizeCanvas();
 	
 	// Récupération du canvas et du context
-	var canvas = document.getElementById('mon_canvas');
+	var canvas = document.getElementById('balls_canvas');
 	if(!canvas) {
 		alert("Impossible de récupérer le canvas");
 		return;
@@ -31,6 +31,16 @@ window.onload = function()
 			this.speed = speed;
 			this.radius = radius;
 			this.color = color;
+		};
+		
+		// Initialise avec des valeurs aléatoires
+		this.InitRandom = function() {
+			this.radius = Math.floor(Math.random() * (10 - 2)) + 2;
+			this.x = Math.floor(Math.random() * (canvas.width - 2*this.radius)) + this.radius;
+			this.y = Math.floor(Math.random() * (canvas.height - 2*this.radius)) + this.radius;
+			this.dir = (Math.random() * 2 * Math.PI - Math.PI) * -1;
+			this.speed = Math.floor(Math.random() * (10 - 2)) + 2;
+			this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
 		};
 		
 		// Desinne la balle dans le canvas
@@ -70,8 +80,54 @@ window.onload = function()
 		};
 	}
 	
-    var ball = new Ball();
-	ball.Init(50, 50, GetRandomAngle(), 5, 10, "#0000FF");
+	var ball = new Ball();
+	ball.InitRandom();
+	var balls = [ball];
+	
+	// Récupération du slider
+	var slider = document.getElementById('balls_slider');
+	if(!slider) {
+		alert("Impossible de récupérer le slider");
+		return;
+	}
+	
+	var onChangeCallback = function(e) {
+		var sliderValue = e.srcElement.value;
+		if(balls.length < sliderValue) {
+			var ballsNeeded = sliderValue - balls.length;
+			for(var i = 0; i < ballsNeeded; i++) {
+				var ball = new Ball();
+				ball.InitRandom();
+				balls.push(ball);
+			}
+		}
+		else if(balls.length > sliderValue) {
+			var ballsToRemove = balls.length - sliderValue;
+			for(var i = 0; i < ballsToRemove; i++) {
+				balls.pop();
+			}
+		}
+	}
+	
+	slider.addEventListener("change", 
+		function(e) {
+			var sliderValue = e.srcElement.value;
+			if(balls.length < sliderValue) {
+				var ballsNeeded = sliderValue - balls.length;
+				for(var i = 0; i < ballsNeeded; i++) {
+					var ball = new Ball();
+					ball.InitRandom();
+					balls.push(ball);
+				}
+			}
+			else if(balls.length > sliderValue) {
+				var ballsToRemove = balls.length - sliderValue;
+				for(var i = 0; i < ballsToRemove; i++) {
+					balls.pop();
+				}
+			}
+		}
+	);
 	
 	// Boucle de rafraichissement du canvas
     Animate();
@@ -82,11 +138,11 @@ window.onload = function()
 		// Clear du canvas
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
-		// Mise à jour 
-		ball.Update();
-		
-		// Affichage sur le canvas
-		ball.Draw(context);
+		// Mise à jour et affichage
+		for(var b in balls) {
+			balls[b].Update();
+			balls[b].Draw(context);
+		}
 		
 		requestAnimationFrame(Animate);
     } 
@@ -96,7 +152,7 @@ window.onresize = ResizeCanvas;
 
 // Redimensionne le canvas en fonction de la fenêtre
 function ResizeCanvas() {
-	var canvas = document.getElementById('mon_canvas');
+	var canvas = document.getElementById('balls_canvas');
 	if(!canvas) {
 		alert("Impossible de récupérer le canvas");
 		return;
@@ -104,9 +160,4 @@ function ResizeCanvas() {
 	
 	canvas.width = window.innerWidth * 0.9;
 	canvas.height = window.innerHeight * 0.8;
-}
-
-// Donne un angle dans l'intervalle ]-PI; PI]
-function GetRandomAngle() {
-	return (Math.random() * 2 * Math.PI - Math.PI) * -1;
 }

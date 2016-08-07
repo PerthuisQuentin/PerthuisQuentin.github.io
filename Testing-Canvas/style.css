@@ -10,10 +10,13 @@ body {
 	border: 1px solid black;
 }
 
+#inputs {
+	padding-top: 10px;
+	display: flex;
+	justify-content: space-between;
+}
 
 #balls_slider {
-	padding-top: 5px;
-	width: 100%;
-	margin: auto;
-	display: block;
+	flex: 1;
 }
+

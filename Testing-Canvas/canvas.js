@@ -80,9 +80,8 @@ window.onload = function()
 		};
 	}
 	
-	var ball = new Ball();
-	ball.InitRandom();
-	var balls = [ball];
+	//Tableau contenant toutes les balles
+	var balls = [];
 	
 	// Récupération du slider
 	var slider = document.getElementById('balls_slider');
@@ -91,8 +90,17 @@ window.onload = function()
 		return;
 	}
 	
-	var onChangeCallback = function(e) {
-		var sliderValue = e.srcElement.value;
+	// Récupération de l'input
+	var input = document.getElementById('balls_input');
+	if(!input) {
+		alert("Impossible de récupérer l'input");
+		return;
+	}
+	
+	// Change du nombre de balle
+	function setBallAmount(amount) {
+		var sliderValue = amount;
+		
 		if(balls.length < sliderValue) {
 			var ballsNeeded = sliderValue - balls.length;
 			for(var i = 0; i < ballsNeeded; i++) {
@@ -109,25 +117,25 @@ window.onload = function()
 		}
 	}
 	
+	// Evenement au changement de la valeur du slider
 	slider.addEventListener("change", 
 		function(e) {
-			var sliderValue = e.srcElement.value;
-			if(balls.length < sliderValue) {
-				var ballsNeeded = sliderValue - balls.length;
-				for(var i = 0; i < ballsNeeded; i++) {
-					var ball = new Ball();
-					ball.InitRandom();
-					balls.push(ball);
-				}
-			}
-			else if(balls.length > sliderValue) {
-				var ballsToRemove = balls.length - sliderValue;
-				for(var i = 0; i < ballsToRemove; i++) {
-					balls.pop();
-				}
-			}
+			setBallAmount(e.srcElement.value);
+			input.value = e.srcElement.value;
 		}
 	);
+	
+	// Evenement au changement de la valeur de l'input
+	input.addEventListener("change",
+		function(e) {
+			setBallAmount(e.srcElement.value);
+			slider.value = e.srcElement.value;
+		}
+	);
+	
+		
+	// Initialisation des balles
+	setBallAmount(1);
 	
 	// Boucle de rafraichissement du canvas
     Animate();

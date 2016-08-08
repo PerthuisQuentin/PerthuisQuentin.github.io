@@ -3,20 +3,43 @@ body {
 	margin-right: 5%;
 }
 
-#balls_canvas {
+#balls-canvas {
 	padding: 0;
 	margin: auto;
 	display: block;
 	border: 1px solid black;
 }
 
-#inputs {
-	padding-top: 10px;
+#settings {
+	margin-top: 10px;
 	display: flex;
+    flex-direction: column;
+}
+
+#settings-mode {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	justify-content: flex-start;
+}
+
+#settings-amount {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 	justify-content: space-between;
 }
 
-#balls_slider {
+#balls-input {
+	display: flex;
+}
+
+#balls-slider {
+	display: flex;
 	flex: 1;
 }
 
+span {
+	display: flex;
+	vertical-align: middle;
+}

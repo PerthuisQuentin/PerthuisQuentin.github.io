@@ -19,27 +19,21 @@ body {
 #settings-mode {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
 	justify-content: flex-start;
+	align-item: center;
 }
 
 #settings-amount {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
 	justify-content: space-between;
-}
-
-#balls-input {
-	display: flex;
+	align-item: center;
 }
 
 #balls-slider {
-	display: flex;
 	flex: 1;
 }
 
 span {
-	display: flex;
-	vertical-align: middle;
+	line-height: 100%;
 }

@@ -20,20 +20,16 @@ body {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
-	align-item: center;
+	align-items: center;
 }
 
 #settings-amount {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-item: center;
+	align-items: center;
 }
 
 #balls-slider {
 	flex: 1;
-}
-
-span {
-	line-height: 100%;
 }

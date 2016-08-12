@@ -1,4 +1,5 @@
 Collision
 Duplication
-Création de mur
+Fusion
+Création de murs
 Jeu : Eviter les balles

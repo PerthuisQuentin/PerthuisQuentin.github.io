@@ -65,7 +65,7 @@ function init() {
 
 // Objet gérant le balls-canvas
 function BallsCanvas(canvas) {
-	this._ballEngine = new BallEngine(this, canvas);
+	var _ballEngine = new BallEngine(this, canvas);
 
 	this.start = function() {
 		this.animate();
@@ -81,8 +81,8 @@ function BallsCanvas(canvas) {
 	
 	// Redimensionne le canvas en fonction de la fenêtre
 	this.resizeCanvas = function() {
-		canvas.width = window.innerWidth * 0.9;
-		canvas.height = window.innerHeight * 0.8;
+		canvas.width = window.clientWidth;
+		canvas.height = window.clientHeight;
 	};
 
 	// Fonction de rafraichissement du canvas

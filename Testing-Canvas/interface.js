@@ -61,22 +61,25 @@ function init() {
 			ballsCanvas.setBallsAmount(v);
 		}
 	);
+
+	ballsCanvas.start();
 }
 
 // Objet gérant le balls-canvas
 function BallsCanvas(canvas) {
-	var _ballEngine = new BallEngine(this, canvas);
+	var context = canvas.getContext('2d');
+	var _ballEngine = new BallEngine(this, canvas, context);
 
 	this.start = function() {
-		this.animate();
+		animate();
 	};
 
 	this.setDuplicationMode = function(state) {
-		this._ballEngine.duplicationMode = state;
+		_ballEngine.duplicationMode = state;
 	};
 
 	this.setBallsAmount = function(amount) {
-		this._ballEngine.ballsAmount = amount;
+		_ballEngine.ballsAmount = amount;
 	};
 	
 	// Redimensionne le canvas en fonction de la fenêtre
@@ -86,13 +89,13 @@ function BallsCanvas(canvas) {
 	};
 
 	// Fonction de rafraichissement du canvas
-	this.animate = function() {
+	var animate = function() {
 		// Clear du canvas
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
-		this._ballEngine.update();
-		this._ballEngine.draw();
+		_ballEngine.update();
+		_ballEngine.draw();
 
-		requestAnimationFrame(this.animate);
+		requestAnimationFrame(animate);
 	};
 }

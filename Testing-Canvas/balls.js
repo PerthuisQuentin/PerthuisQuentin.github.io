@@ -15,6 +15,12 @@ function Ball(handler, canvas, context) {
 	this.setRadius = function(radius) { _radius = radius; };
 	this.setColor = function(color) { _color = color; };
 
+	this.getX = function() { return _x; };
+	this.getY = function() { return _y; };
+	this.getDirection = function() { return _direction };
+	this.getSpeed = function() { return _speed };
+	this.getRadius = function() { return _radius };
+
 	// Initialise avec des valeurs aléatoires
 	this.initRandom = function() {
 		_radius = Math.floor(Math.random() * (handler.getRadiusMax() - handler.getRadiusMin())) + handler.getRadiusMin();
@@ -33,5 +39,11 @@ function Ball(handler, canvas, context) {
 		context.arc(_x, _y, _radius, 0, Math.PI*2);
 		context.fill();
 		context.closePath();
+	};
+
+	// Mets à jour les informations de la balle
+	this.update = function() {
+		_x += Math.cos(_direction) * _speed;
+		_y += Math.sin(_direction) * _speed;
 	};
 }

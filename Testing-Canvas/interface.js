@@ -71,21 +71,22 @@ function BallsCanvas(canvas) {
 	var _ballEngine = new BallEngine(this, canvas, context);
 
 	this.start = function() {
+		_ballEngine.init();
 		animate();
 	};
 
 	this.setDuplicationMode = function(state) {
-		_ballEngine.duplicationMode = state;
+		_ballEngine.setDuplicationMode(amount);
 	};
 
 	this.setBallsAmount = function(amount) {
-		_ballEngine.ballsAmount = amount;
+		_ballEngine.setBallsAmount(amount);
 	};
 	
 	// Redimensionne le canvas en fonction de la fenêtre
 	this.resizeCanvas = function() {
-		canvas.width = window.clientWidth;
-		canvas.height = window.clientHeight;
+		canvas.width = canvas.clientWidth;
+		canvas.height = canvas.clientHeight;
 	};
 
 	// Fonction de rafraichissement du canvas

@@ -1,7 +1,7 @@
 // Moteur physique gérant des balles
 function BallEngine(handler, canvas, context) {
+	var self = this;
 	var _balls = [];
-	var _thisBallEngine = this;
 
 	// Paramètres du moteur physique
 	var _ballsAmount = 1;
@@ -25,7 +25,7 @@ function BallEngine(handler, canvas, context) {
 	this.getSpeedMax = function() { return _speedMax; };
 
 	this.init = function() {
-		var ball = new Ball(_thisBallEngine, canvas, context);
+		var ball = new Ball(self, canvas, context);
 		ball.initRandom();
 		_balls.push(ball);
 	};
@@ -47,7 +47,7 @@ function BallEngine(handler, canvas, context) {
 		if(_balls.length < _ballsAmount) {
 			var ballsNeeded = _ballsAmount - _balls.length;
 			for(var i = 0; i < ballsNeeded; i++) {
-				var ball = new Ball(_thisBallEngine, canvas, context);
+				var ball = new Ball(self, canvas, context);
 				ball.initRandom();
 				_balls.push(ball);
 			}

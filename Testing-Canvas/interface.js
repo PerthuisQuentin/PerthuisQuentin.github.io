@@ -67,8 +67,9 @@ function init() {
 
 // Objet gérant le balls-canvas
 function BallsCanvas(canvas) {
-	var context = canvas.getContext('2d');
-	var _ballEngine = new BallEngine(this, canvas, context);
+	var self = this;
+	var _context = canvas.getContext('2d');
+	var _ballEngine = new BallEngine(self, canvas, _context);
 
 	this.start = function() {
 		_ballEngine.init();
@@ -92,7 +93,7 @@ function BallsCanvas(canvas) {
 	// Fonction de rafraichissement du canvas
 	var animate = function() {
 		// Clear du canvas
-		context.clearRect(0, 0, canvas.width, canvas.height);
+		_context.clearRect(0, 0, canvas.width, canvas.height);
 
 		_ballEngine.update();
 		_ballEngine.draw();

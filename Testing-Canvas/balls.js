@@ -12,6 +12,9 @@ function Ball(handler, canvas, context) {
 	this.setX = function(x) { _x = x; };
 	this.setY = function(y) { _y = y; };
 	this.setXY = function(x, y) { _x = x; _y = y; };
+	this.setOldX = function(x) { _oldX = x; };
+	this.setOldY = function(y) { _oldY = y; };
+	this.setOldXY = function(x, y) { _oldX = x; _oldY = y; };
 	this.setDirection = function(direction) { _direction = direction; };
 	this.setSpeed = function(speed) { _speed = speed; };
 	this.setRadius = function(radius) { _radius = radius; };
@@ -19,9 +22,12 @@ function Ball(handler, canvas, context) {
 
 	this.getX = function() { return _x; };
 	this.getY = function() { return _y; };
-	this.getDirection = function() { return _direction };
-	this.getSpeed = function() { return _speed };
-	this.getRadius = function() { return _radius };
+	this.getOldX = function() { return _oldX; };
+	this.getOldY = function() { return _oldY; };
+	this.getDirection = function() { return _direction; };
+	this.getSpeed = function() { return _speed; };
+	this.getRadius = function() { return _radius; };
+	this.getColor = function() { return _color; };
 
 	// Initialise avec des valeurs aléatoires
 	this.initRandom = function() {

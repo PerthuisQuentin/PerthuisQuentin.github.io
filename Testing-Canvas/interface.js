@@ -52,6 +52,7 @@ function init() {
 	// Evenement au changement de la valeur de l'input
 	input.addEventListener("change",
 		function(e) {
+			// 0 <= v <= 200 (Integer)
 			var v = Math.round(e.target.value);
 			v = v>200?200:v;
 			v = v<0?0:v;
@@ -70,14 +71,17 @@ function BallsCanvas(canvas) {
 	var self = this;
 	var _context = canvas.getContext('2d');
 	var _ballEngine = new BallEngine(self, canvas, _context);
+	var _started = false;
 
 	this.start = function() {
-		_ballEngine.init();
-		animate();
-	};
+		if(!_started) {
+			animate();
+			_started = true;
+		}
+	}
 
 	this.setDuplicationMode = function(state) {
-		_ballEngine.setDuplicationMode(amount);
+		_ballEngine.setDuplicationMode(state);
 	};
 
 	this.setBallsAmount = function(amount) {

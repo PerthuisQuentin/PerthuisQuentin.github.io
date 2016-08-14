@@ -24,12 +24,6 @@ function BallEngine(handler, canvas, context) {
 	this.getSpeedMin = function() { return _speedMin; };
 	this.getSpeedMax = function() { return _speedMax; };
 
-	this.init = function() {
-		var ball = new Ball(self, canvas, context);
-		ball.initRandom();
-		_balls.push(ball);
-	};
-
 	this.update = function() {
 		for(var i in _balls) {
 			_balls[i].update();
@@ -61,12 +55,41 @@ function BallEngine(handler, canvas, context) {
 		}
 	};
 
+	// Dupplique une balle en la divisant en deux
+	var duplicateBall = function(ball) {
+		var newRadius = ball.getRadius() / 2;
+		if(newRadius < 0.5) {
+			// TODO : Delete the ball
+			return;
+		}
+
+		ball.setRadius(newRadius);
+			
+		var duplicata = new Ball(self, canvas, context);
+		var d = ball.getDirection(), newDir;
+
+		if(d > 0) newDir = d - Math.PI;
+		else if(d < 0) newDir = d + Math.PI;
+		else newDir = 0;
+
+		duplicata.setOldXY(ball.getOldX(), ball.getOldY());
+		duplicata.setDirection(newDir);
+		duplicata.setSpeed(ball.getSpeed());
+		duplicata.setRadius(newRadius);
+		duplicata.setColor(ball.getColor());
+		duplicata.updateOld();
+		
+		_balls.push(duplicata);
+	}
+
 	// Post-correction des rebonds sur les bordures
 	var verifyCollisionWithBorders = function(ball) {
 		var x = ball.getX(), y = ball.getY(), d = ball.getDirection(), s = ball.getSpeed(), r = ball.getRadius();
 
 		if ((x > (canvas.width - r)) || (x < r)) {
-			if(d == Math.PI)
+			if(_duplicationMode) duplicateBall(ball);
+
+			if(d === Math.PI)
 				ball.setDirection(0);
 			else if(d > 0)
 				ball.setDirection(Math.PI - d);
@@ -76,12 +99,21 @@ function BallEngine(handler, canvas, context) {
 				ball.setDirection(Math.PI);
 
 			ball.updateOld();
+			return true;
 		}
 		else if ((y > (canvas.height - r)) || (y < r)) {
+			if(_duplicationMode) duplicateBall(ball);
+
 			ball.setDirection(-d);
 
 			ball.updateOld();
+			return true;
 		}
+
+		return false;
 	};
+
+	// Init
+	updateBallsAmount();
 }
 

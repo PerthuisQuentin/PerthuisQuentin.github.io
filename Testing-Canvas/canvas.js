@@ -63,7 +63,7 @@ function BallEngine(handler, canvas, context) {
 
 	// Supprime une balle et en crée une nouvelle si la balle n'est pas un duplicata
 	var removeBall = function(id) {
-		if(_balls[id].isOriginal) {
+		if(_balls[id].getIsOriginal()) {
 			addRandomBall();
 		}
 		_balls.splice(id, 1);
@@ -78,8 +78,6 @@ function BallEngine(handler, canvas, context) {
 		}
 
 		ball.setRadius(newRadius);
-
-		return;
 			
 		var duplicata = new Ball(self, canvas, context);
 		var d = ball.getDirection(), newDir;

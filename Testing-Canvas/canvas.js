@@ -2,6 +2,7 @@
 function BallEngine(handler, canvas, context) {
 	var self = this;
 	var _balls = [];
+	var _i; // Itérateur pour le parcours des balles
 
 	// Paramètres du moteur physique
 	var _ballsAmount = 1;
@@ -25,9 +26,9 @@ function BallEngine(handler, canvas, context) {
 	this.getSpeedMax = function() { return _speedMax; };
 
 	this.update = function() {
-		for(var i in _balls) {
-			_balls[i].update();
-			verifyCollisionWithBorders(_balls[i]);
+		for(_i = _balls.length - 1; _i >= 0; _i--) {
+			_balls[_i].update();
+			verifyCollisionWithBorders(_balls[_i]);
 		}
 	};
 
@@ -37,14 +38,19 @@ function BallEngine(handler, canvas, context) {
 		}
 	};
 
+	// Ajoute une balle instanciée aléatoirement
+	var addRandomBall = function() {
+		var ball = new Ball(self, canvas, context);
+		ball.initRandom();
+		_balls.push(ball);
+	};
+
 	// Ajoute ou retire des balles en fonction du nombre désirée
 	var updateBallsAmount = function() {
 		if(_balls.length < _ballsAmount) {
 			var ballsNeeded = _ballsAmount - _balls.length;
 			for(var i = 0; i < ballsNeeded; i++) {
-				var ball = new Ball(self, canvas, context);
-				ball.initRandom();
-				_balls.push(ball);
+				addRandomBall();
 			}
 		}
 		else if(_balls.length > _ballsAmount) {
@@ -55,15 +61,25 @@ function BallEngine(handler, canvas, context) {
 		}
 	};
 
-	// Dupplique une balle en la divisant en deux
+	// Supprime une balle et en crée une nouvelle si la balle n'est pas un duplicata
+	var removeBall = function(id) {
+		if(_balls[id].isOriginal) {
+			addRandomBall();
+		}
+		_balls.splice(id, 1);
+	};
+
+	// Duplique une balle en la divisant en deux
 	var duplicateBall = function(ball) {
 		var newRadius = ball.getRadius() / 2;
 		if(newRadius < 0.5) {
-			// TODO : Delete the ball
+			removeBall(_i);
 			return;
 		}
 
 		ball.setRadius(newRadius);
+
+		return;
 			
 		var duplicata = new Ball(self, canvas, context);
 		var d = ball.getDirection(), newDir;
@@ -77,6 +93,7 @@ function BallEngine(handler, canvas, context) {
 		duplicata.setSpeed(ball.getSpeed());
 		duplicata.setRadius(newRadius);
 		duplicata.setColor(ball.getColor());
+		duplicata.setIsOriginal(false);
 		duplicata.updateOld();
 		
 		_balls.push(duplicata);

@@ -8,6 +8,8 @@ function Ball(handler, canvas, context) {
 	var _speed = 0;
 	var _radius = 1;
 	var _color = "#000000";
+	var _isOriginal = true;
+
 
 	this.setX = function(x) { _x = x; };
 	this.setY = function(y) { _y = y; };
@@ -19,6 +21,7 @@ function Ball(handler, canvas, context) {
 	this.setSpeed = function(speed) { _speed = speed; };
 	this.setRadius = function(radius) { _radius = radius; };
 	this.setColor = function(color) { _color = color; };
+	this.setIsOriginal = function(state) { _isOriginal = state; };
 
 	this.getX = function() { return _x; };
 	this.getY = function() { return _y; };
@@ -28,6 +31,7 @@ function Ball(handler, canvas, context) {
 	this.getSpeed = function() { return _speed; };
 	this.getRadius = function() { return _radius; };
 	this.getColor = function() { return _color; };
+	this.isOriginal = function() { return _isOriginal; };
 
 	// Initialise avec des valeurs aléatoires
 	this.initRandom = function() {
@@ -39,6 +43,7 @@ function Ball(handler, canvas, context) {
 		_direction = (Math.random() * 2 * Math.PI - Math.PI) * -1;
 		_speed = Math.floor(Math.random() * (handler.getSpeedMax() - handler.getSpeedMin())) + handler.getSpeedMin();
 		_color = '#' + Math.floor(Math.random()*16777215).toString(16);
+		_isOriginal = true;
 	};
 
 	// Desinne la balle dans le canvas

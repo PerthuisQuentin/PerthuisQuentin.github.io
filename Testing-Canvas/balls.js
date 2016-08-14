@@ -31,7 +31,7 @@ function Ball(handler, canvas, context) {
 	this.getSpeed = function() { return _speed; };
 	this.getRadius = function() { return _radius; };
 	this.getColor = function() { return _color; };
-	this.isOriginal = function() { return _isOriginal; };
+	this.getIsOriginal = function() { return _isOriginal; };
 
 	// Initialise avec des valeurs aléatoires
 	this.initRandom = function() {

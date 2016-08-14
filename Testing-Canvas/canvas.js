@@ -32,8 +32,8 @@ function BallEngine(handler, canvas, context) {
 
 	this.update = function() {
 		for(var i in _balls) {
-			verifyCollisionWithBorders(_balls[i]);
 			_balls[i].update();
+			verifyCollisionWithBorders(_balls[i]);
 		}
 	};
 
@@ -43,6 +43,7 @@ function BallEngine(handler, canvas, context) {
 		}
 	};
 
+	// Ajoute ou retire des balles en fonction du nombre désirée
 	var updateBallsAmount = function() {
 		if(_balls.length < _ballsAmount) {
 			var ballsNeeded = _ballsAmount - _balls.length;
@@ -60,14 +61,11 @@ function BallEngine(handler, canvas, context) {
 		}
 	};
 
+	// Post-correction des rebonds sur les bordures
 	var verifyCollisionWithBorders = function(ball) {
-		// Rebonds sur les bordures externes
 		var x = ball.getX(), y = ball.getY(), d = ball.getDirection(), s = ball.getSpeed(), r = ball.getRadius();
 
-		var newX = x + Math.cos(d) * s;
-		var newY = y + Math.sin(d) * s;
-
-		if ((newX > (canvas.width - r)) || (newX < r)) {
+		if ((x > (canvas.width - r)) || (x < r)) {
 			if(d == Math.PI)
 				ball.setDirection(0);
 			else if(d > 0)
@@ -76,9 +74,13 @@ function BallEngine(handler, canvas, context) {
 				ball.setDirection(-Math.PI - d);
 			else 
 				ball.setDirection(Math.PI);
+
+			ball.updateOld();
 		}
-		else if ((newY > (canvas.height - r)) || (newY < r)) {
+		else if ((y > (canvas.height - r)) || (y < r)) {
 			ball.setDirection(-d);
+
+			ball.updateOld();
 		}
 	};
 }

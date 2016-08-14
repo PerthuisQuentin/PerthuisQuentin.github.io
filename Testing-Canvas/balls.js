@@ -2,6 +2,8 @@
 function Ball(handler, canvas, context) {
 	var _x = 0; 
 	var _y = 0;
+	var _oldX = 0;
+	var _oldY = 0;
 	var _direction = 0;
 	var _speed = 0;
 	var _radius = 1;
@@ -26,6 +28,8 @@ function Ball(handler, canvas, context) {
 		_radius = Math.floor(Math.random() * (handler.getRadiusMax() - handler.getRadiusMin())) + handler.getRadiusMin();
 		_x = Math.floor(Math.random() * (canvas.width - 2*_radius)) + _radius;
 		_y = Math.floor(Math.random() * (canvas.height - 2*_radius)) + _radius;
+		_oldX = _x;
+		_oldY = _y;
 		_direction = (Math.random() * 2 * Math.PI - Math.PI) * -1;
 		_speed = Math.floor(Math.random() * (handler.getSpeedMax() - handler.getSpeedMin())) + handler.getSpeedMin();
 		_color = '#' + Math.floor(Math.random()*16777215).toString(16);
@@ -43,7 +47,15 @@ function Ball(handler, canvas, context) {
 
 	// Mets à jour les informations de la balle
 	this.update = function() {
+		_oldX = _x;
+		_oldY = _y;
 		_x += Math.cos(_direction) * _speed;
 		_y += Math.sin(_direction) * _speed;
+	};
+
+	// Mets à jour les informations de la balle à partir de la position précédente
+	this.updateOld = function() {
+		_x = _oldX + Math.cos(_direction) * _speed;
+		_y = _oldY + Math.sin(_direction) * _speed;
 	};
 }

@@ -20,6 +20,11 @@ function BallEngine(handler, canvas, context) {
 	var _speedMin = 2;
 	var _speedMax = 10;
 
+	this.setRadiusMin = function(radiusMin) { _radiusMin = radiusMin ; };
+	this.setRadiusMax = function(radiusMax) { _radiusMax = radiusMax ; };
+	this.setSpeedMin = function(speedMin) { _speedMin = speedMin ; };
+	this.setSpeedMax = function(speedMax) { _speedMax = speedMax ; };
+
 	this.getRadiusMin = function() { return _radiusMin; };
 	this.getRadiusMax = function() { return _radiusMax };
 	this.getSpeedMin = function() { return _speedMin; };
@@ -47,6 +52,12 @@ function BallEngine(handler, canvas, context) {
 
 	// Ajoute ou retire des balles en fonction du nombre désirée
 	var updateBallsAmount = function() {
+		if(_ballsAmount === 1) {
+			_balls = [];
+			addRandomBall();
+			return;
+		}
+
 		if(_balls.length < _ballsAmount) {
 			var ballsNeeded = _ballsAmount - _balls.length;
 			for(var i = 0; i < ballsNeeded; i++) {

@@ -28,17 +28,14 @@ body {
 
 #settings span {
 	padding-right: 5px;
+	width: 5%;
 }
 
 #settings input[type=number] {
 	width: 50px;
 }
 
-#settings-amount {
-	justify-content: space-between;
-}
-
-#amount-slider {
+#amount-slider, #radius-slider, #speed-slider {
 	flex: 1;
 	margin-left: 20px;
 	margin-right: 20px;

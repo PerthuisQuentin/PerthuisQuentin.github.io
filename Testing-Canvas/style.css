@@ -18,20 +18,28 @@ body {
     flex-direction: column;
 }
 
-#settings-mode {
+#settings > div {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
+	padding-bottom: 10px;
+}
+
+#settings span {
+	padding-right: 5px;
+}
+
+#settings input[type=number] {
+	width: 50px;
 }
 
 #settings-amount {
-	display: flex;
-	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
 }
 
-#balls-slider {
+#amount-slider {
 	flex: 1;
+	margin-left: 20px;
+	margin-right: 20px;
 }

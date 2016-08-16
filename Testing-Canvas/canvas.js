@@ -149,41 +149,52 @@ function BallEngine(handler, canvas, context) {
 
 // Objet de collision de boite AABB
 function BoundaryAABB(x, y, w, h) {
+	var self = this;
 	this._x = x;
 	this._y = y;
 	this._w = w;
 	this._h = h;
 
+	// Dessine le rectangle sur "context"
 	this.draw = function(context) {
 		context.fillStyle = "#000000";
 		context.strokeRect(this._x, this._y, this._w, this._h);
 	};
 
+	// Test si le rectangle contient le point de coordonnées xy
 	this.containsPoint = function(x, y) {
 		return (
-			x >= this._x &&
-			x <= this._x + this._w &&
-			y >= this._y &&
-			y <= this._y + this._h
+			x > this._x &&
+			x < this._x + this._w &&
+			y > this._y &&
+			y < this._y + this._h
 		);
 	};
 
+	// Test si le rectangle croise un rectangle donné
 	this.intersectsAABB = function(boundaryAABB) {
 		return !(
-			boundaryAABB._x + boundaryAABB._w < this._x || // Gauche
-			boundaryAABB._y + boundaryAABB._h < this._y || // Haut
-			boundaryAABB._x > this._x + this._w || // Droite
-			boundaryAABB._y > this._y + this._h // Bas
+			boundaryAABB._x + boundaryAABB._w <= this._x || // Gauche
+			boundaryAABB._y + boundaryAABB._h <= this._y || // Haut
+			boundaryAABB._x >= this._x + this._w || // Droite
+			boundaryAABB._y >= this._y + this._h // Bas
 		);
+	};
+
+	// Test si le rectangle croise un cercle donné
+	this.intersectsCircle = function(boundaryCircle) {
+		return boundaryCircle.intersectsAABB(this);
 	};
 }
 
 // Objet de collision de cercle
 function BoundaryCircle(x, y, r) {
+	var self = this;
 	this._x = x;
 	this._y = y;
 	this._r = r;
 
+	// Dessine le cercle sur "context"
 	this.draw = function(context) {
 		context.strokeStyle = "#000000";
 		context.beginPath();
@@ -192,26 +203,59 @@ function BoundaryCircle(x, y, r) {
 		context.closePath();
 	};
 
+	// Test si le cercle contient le point de coordonnées xy
 	this.containsPoint = function(x, y) {
 		var d = (x - this._x) * (x - this._x) + 
 				(y - this._y) * (y - this._y);
 
-		return (d <= this._r * this._r);
+		return (d < this._r * this._r);
 	};
 
+	// Test si le cercle croise un cercle donné
 	this.intersectsCircle = function(boundaryCircle) {
 		var d = (boundaryCircle._x - this._x) * (boundaryCircle._x - this._x) + 
 				(boundaryCircle._y - this._y) * (boundaryCircle._y - this._y);
 
-		return (d <= (boundaryCircle._r + this._r) * (boundaryCircle._r + this._r));
+		return (d < (boundaryCircle._r + this._r) * (boundaryCircle._r + this._r));
 	};
 
+	// Test si il est possible de projeter le centre du cercle sur un segment AB donné
+	var canProjectCenterOnSegment = function(aX, aY, bX, bY) {
+		var acX = self._x - aX;
+		var acY = self._y - aY;
+		var abX = bX - aX;
+		var abY = bY - aY;
+		var bcX = self._x - bX;
+		var bcY = self._y - bY;
+		var s1 = (acX * abX) + (acY * abY);
+		var s2 = (bcX * abX) + (bcY * abY);
+		return !(s1 * s2 > 0);
+	}
+
+	// Test si le cercle croise un rectangle donné
 	this.intersectsAABB = function(boundaryAABB) {
 		if(
-			boundaryAABB._x + boundaryAABB._w <= this._x || // Gauche
-			boundaryAABB._y + boundaryAABB._h <= this._y || // Haut
+			boundaryAABB._x + boundaryAABB._w <= this._x - this._r || // Gauche
+			boundaryAABB._y + boundaryAABB._h <= this._y - this._r || // Haut
 			boundaryAABB._x >= this._x + this._r || // Droite
 			boundaryAABB._y >= this._y + this._r // Bas
 		) return false;
+
+		// Test d'un coin du rectangle présent dans le cercle
+		if(
+			this.containsPoint(boundaryAABB._x, boundaryAABB._y) ||
+			this.containsPoint(boundaryAABB._x + boundaryAABB._w, boundaryAABB._y) ||
+			this.containsPoint(boundaryAABB._x, boundaryAABB._y + boundaryAABB._h) ||
+			this.containsPoint(boundaryAABB._x + boundaryAABB._w, boundaryAABB._y + boundaryAABB._h)
+		) return true;
+
+		// Test du cercle contenu dans le rectangle
+		if(boundaryAABB.containsPoint(this._x, this._y)) return true;
+
+		// Test du cercle traversant un unique segment du rectangle
+		var verticalProjection = canProjectCenterOnSegment(boundaryAABB._x, boundaryAABB._y, boundaryAABB._x, boundaryAABB._y + boundaryAABB._h);
+		var horizontalProjection = canProjectCenterOnSegment(boundaryAABB._x, boundaryAABB._y, boundaryAABB._x + boundaryAABB._w, boundaryAABB._y);
+		if(verticalProjection || horizontalProjection) return true;
+		return true;
 	};
 }

@@ -1,5 +1,6 @@
 // Définition d'un objet représentant une balle
 function Ball(handler, canvas, context) {
+	var self = this;
 	var _x = 0; 
 	var _y = 0;
 	var _oldX = 0;

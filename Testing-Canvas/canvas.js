@@ -145,7 +145,7 @@ function BallEngine(handler, canvas, context) {
 	updateBallsAmount();
 }
 
-/* COLLISIONS / QUADTREE */
+/* RECTANGLE DE COLLISION */
 
 // Objet de collision de boite AABB
 function BoundaryAABB(x, y, w, h) {
@@ -186,6 +186,8 @@ function BoundaryAABB(x, y, w, h) {
 		return boundaryCircle.intersectsAABB(this);
 	};
 }
+
+/* CERCLE DE COLLISION */
 
 // Objet de collision de cercle
 function BoundaryCircle(x, y, r) {
@@ -257,5 +259,24 @@ function BoundaryCircle(x, y, r) {
 		var horizontalProjection = canProjectCenterOnSegment(boundaryAABB._x, boundaryAABB._y, boundaryAABB._x + boundaryAABB._w, boundaryAABB._y);
 		if(verticalProjection || horizontalProjection) return true;
 		return true;
+	};
+}
+
+/* QUADTREE */
+
+// Objet de gestion des collisions
+function QuadTree(boundaryAABB, maxObjects) {
+	var _objects = [];
+	var _nodes;
+
+	var subdivide = function() {
+		var halfWidth = boundaryAABB._w / 2;
+		var halfHeight = boundaryAABB._h / 2;
+
+		var _nodes = [];
+		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x, boundaryAABB._y, halfWidth, halfHeight), maxObjects));
+		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x + halfWidth, boundaryAABB._y, halfWidth, halfHeight), maxObjects));
+		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x, boundaryAABB._y + halfHeight, halfWidth, halfHeight), maxObjects));
+		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x+ halfWidth, boundaryAABB._y + halfHeight, halfWidth, halfHeight), maxObjects));
 	};
 }

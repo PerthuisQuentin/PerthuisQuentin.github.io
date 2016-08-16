@@ -1,3 +1,5 @@
+/* GESTION DE LA PHYSIQUE DES BALLES */
+
 // Moteur physique gérant des balles
 function BallEngine(handler, canvas, context) {
 	var self = this;
@@ -106,7 +108,7 @@ function BallEngine(handler, canvas, context) {
 		duplicata.updateOld();
 		
 		_balls.push(duplicata);
-	}
+	};
 
 	// Post-correction des rebonds sur les bordures
 	var verifyCollisionWithBorders = function(ball) {
@@ -143,5 +145,73 @@ function BallEngine(handler, canvas, context) {
 	updateBallsAmount();
 }
 
+/* COLLISIONS / QUADTREE */
 
+// Objet de collision de boite AABB
+function BoundaryAABB(x, y, w, h) {
+	this._x = x;
+	this._y = y;
+	this._w = w;
+	this._h = h;
 
+	this.draw = function(context) {
+		context.fillStyle = "#000000";
+		context.strokeRect(this._x, this._y, this._w, this._h);
+	};
+
+	this.containsPoint = function(x, y) {
+		return (
+			x >= this._x &&
+			x <= this._x + this._w &&
+			y >= this._y &&
+			y <= this._y + this._h
+		);
+	};
+
+	this.intersectsAABB = function(boundaryAABB) {
+		return !(
+			boundaryAABB._x + boundaryAABB._w < this._x || // Gauche
+			boundaryAABB._y + boundaryAABB._h < this._y || // Haut
+			boundaryAABB._x > this._x + this._w || // Droite
+			boundaryAABB._y > this._y + this._h // Bas
+		);
+	};
+}
+
+// Objet de collision de cercle
+function BoundaryCircle(x, y, r) {
+	this._x = x;
+	this._y = y;
+	this._r = r;
+
+	this.draw = function(context) {
+		context.strokeStyle = "#000000";
+		context.beginPath();
+		context.arc(this._x, this._y, this._r, 0, Math.PI*2);
+    	context.stroke();
+		context.closePath();
+	};
+
+	this.containsPoint = function(x, y) {
+		var d = (x - this._x) * (x - this._x) + 
+				(y - this._y) * (y - this._y);
+
+		return (d <= this._r * this._r);
+	};
+
+	this.intersectsCircle = function(boundaryCircle) {
+		var d = (boundaryCircle._x - this._x) * (boundaryCircle._x - this._x) + 
+				(boundaryCircle._y - this._y) * (boundaryCircle._y - this._y);
+
+		return (d <= (boundaryCircle._r + this._r) * (boundaryCircle._r + this._r));
+	};
+
+	this.intersectsAABB = function(boundaryAABB) {
+		if(
+			boundaryAABB._x + boundaryAABB._w <= this._x || // Gauche
+			boundaryAABB._y + boundaryAABB._h <= this._y || // Haut
+			boundaryAABB._x >= this._x + this._r || // Droite
+			boundaryAABB._y >= this._y + this._r // Bas
+		) return false;
+	};
+}

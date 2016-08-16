@@ -244,6 +244,8 @@ function init() {
 	ballsCanvas.start();
 }
 
+var test = [];
+
 // Objet gérant le balls-canvas
 function BallsCanvas(canvas) {
 	var self = this;
@@ -274,7 +276,7 @@ function BallsCanvas(canvas) {
 	this.setBallsSpeed = function(speedMin, speedMax) {
 		_ballEngine.setSpeedMin(speedMin);
 		_ballEngine.setSpeedMax(speedMax);
-	}
+	};
 	
 	// Redimensionne le canvas en fonction de la fenêtre
 	this.resizeCanvas = function() {
@@ -289,6 +291,10 @@ function BallsCanvas(canvas) {
 
 		_ballEngine.update();
 		_ballEngine.draw();
+
+		for(var i in test) {
+			test[i].draw(_context);
+		}
 
 		requestAnimationFrame(animate);
 	};

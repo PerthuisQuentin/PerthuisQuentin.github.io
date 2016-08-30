@@ -1,23 +1,41 @@
-/* POINT DE COLLISION */
+/* OBJET DE COLLISION */
 
-// Objet représentant un point de coordonnées xy
-function Point(x, y) {
+function Boundary(x, y) {
 	var self = this;
 	self._x = x;
 	self._y = y;
 
-	// Dessine le point sur "context"
+	// Dessine le boundary sur "context"
 	self.draw = function(context) {
 		context.fillStyle = "#000000";
 		context.fillRect(self._x, self._y, 1, 1);
 	};
 
-	// Déplace le point
+	// Déplace le boundary
 	self.move = function(x, y) {
 		self._x += x;
 		self._y += y;
 	};
 }
+
+/* POINT DE COLLISION */
+
+// Objet représentant un point de coordonnées xy
+function BoundaryPoint(x, y) {
+	var self = this;
+	self._x = x;
+	self._y = y;
+
+	self.contains = function(boundary) {
+		return false;
+	}
+
+	self.intersects = function(boundary) {
+		return boundary.contains(self);
+	}
+}
+
+BoundaryPoint.prototype = new Boundary();
 
 /* RECTANGLE DE COLLISION */
 

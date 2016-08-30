@@ -35,6 +35,7 @@ function BoundaryPoint(x, y) {
 	}
 }
 
+// Hérite de Boundary
 BoundaryPoint.prototype = new Boundary();
 
 /* RECTANGLE DE COLLISION */
@@ -51,12 +52,6 @@ function BoundaryAABB(x, y, w, h) {
 	self.draw = function(context) {
 		context.fillStyle = "#000000";
 		context.strokeRect(self._x, self._y, self._w, self._h);
-	};
-
-	// Déplace le rectangle
-	self.move = function(x, y) {
-		self._x += x;
-		self._y += y;
 	};
 
 	// Test si le rectangle contient le point donné
@@ -126,6 +121,9 @@ function BoundaryAABB(x, y, w, h) {
 	};
 }
 
+// Hérite de Boundary
+BoundaryAABB.prototype = new Boundary();
+
 /* CERCLE DE COLLISION */
 
 // Objet de collision de cercle
@@ -142,12 +140,6 @@ function BoundaryCircle(x, y, r) {
 		context.arc(self._x, self._y, self._r, 0, Math.PI*2);
     	context.stroke();
 		context.closePath();
-	};
-
-	// Déplace le cercle
-	self.move = function(x, y) {
-		self._x += x;
-		self._y += y;
 	};
 
 	// Test si le cercle contient le point donné
@@ -250,3 +242,6 @@ function BoundaryCircle(x, y, r) {
 		}
 	};
 }
+
+// Hérite de Boundary
+BoundaryCircle.prototype = new Boundary();

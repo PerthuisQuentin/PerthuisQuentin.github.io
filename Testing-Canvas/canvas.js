@@ -1,3 +1,5 @@
+/* GESTION DE LA PHYSIQUE DES BALLES */
+
 // Moteur physique gérant des balles
 function BallEngine(handler, canvas, context) {
 	var self = this;
@@ -8,11 +10,11 @@ function BallEngine(handler, canvas, context) {
 	var _ballsAmount = 1;
 	var _duplicationMode = false;
 
-	this.setBallsAmount = function(amount) {
+	self.setBallsAmount = function(amount) {
 		_ballsAmount = amount;
 		updateBallsAmount();
 	};
-	this.setDuplicationMode = function(state) { _duplicationMode = state; };
+	self.setDuplicationMode = function(state) { _duplicationMode = state; };
 
 	// Paramètres des balles
 	var _radiusMin = 4;
@@ -20,24 +22,33 @@ function BallEngine(handler, canvas, context) {
 	var _speedMin = 2;
 	var _speedMax = 10;
 
-	this.setRadiusMin = function(radiusMin) { _radiusMin = radiusMin ; };
-	this.setRadiusMax = function(radiusMax) { _radiusMax = radiusMax ; };
-	this.setSpeedMin = function(speedMin) { _speedMin = speedMin ; };
-	this.setSpeedMax = function(speedMax) { _speedMax = speedMax ; };
+	self.setRadiusMin = function(radiusMin) { _radiusMin = radiusMin ; };
+	self.setRadiusMax = function(radiusMax) { _radiusMax = radiusMax ; };
+	self.setSpeedMin = function(speedMin) { _speedMin = speedMin ; };
+	self.setSpeedMax = function(speedMax) { _speedMax = speedMax ; };
 
-	this.getRadiusMin = function() { return _radiusMin; };
-	this.getRadiusMax = function() { return _radiusMax };
-	this.getSpeedMin = function() { return _speedMin; };
-	this.getSpeedMax = function() { return _speedMax; };
+	self.getRadiusMin = function() { return _radiusMin; };
+	self.getRadiusMax = function() { return _radiusMax };
+	self.getSpeedMin = function() { return _speedMin; };
+	self.getSpeedMax = function() { return _speedMax; };
 
-	this.update = function() {
+	var quadtree;
+	//setInterval(function () { quadtree.debug(); } , 5000);
+
+	self.update = function() {
 		for(_i = _balls.length - 1; _i >= 0; _i--) {
 			_balls[_i].update();
 			verifyCollisionWithBorders(_balls[_i]);
 		}
+
+		quadtree = new QuadTree(new BoundaryAABB(0, 0, canvas.width, canvas.height), 0, 3, 3);
+		for(var i in _balls) {
+			quadtree.insert(_balls[i]);
+		}
+		quadtree.draw(context);
 	};
 
-	this.draw = function() {
+	self.draw = function() {
 		for(var i in _balls) {
 			_balls[i].draw();
 		}
@@ -106,7 +117,7 @@ function BallEngine(handler, canvas, context) {
 		duplicata.updateOld();
 		
 		_balls.push(duplicata);
-	}
+	};
 
 	// Post-correction des rebonds sur les bordures
 	var verifyCollisionWithBorders = function(ball) {
@@ -142,6 +153,3 @@ function BallEngine(handler, canvas, context) {
 	// Init
 	updateBallsAmount();
 }
-
-
-

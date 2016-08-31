@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
 		<title>Testing Canvas</title>
+		<link rel="stylesheet" type="text/css" href="nouislider.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
@@ -12,16 +13,29 @@
 		
 		<div id="settings">
 			<div id="settings-mode">
-				<span>Modes : </span>
+				<span>Modes :</span>
 				<input id="mode-duplication" type="checkbox" value="1"><label for="mode-duplication">Duplication</label><br>
 			</div>
 			<div id="settings-amount">
-				<span>Amount : </span>
-				<input id="balls-slider" type="range" value="1" min="1" max="200" step="1">
-				<input id="balls-input" type="number" value="1" min="1" max="200">
+				<span>Amount :</span>
+				<div id="amount-slider"></div>
+				<input id="amount-input" type="number" value="1">
+			</div>
+			<div id="settings-radius">
+				<span>Radius :</span>
+				<input id="radius-input-min" type="number" value="1">
+				<div id="radius-slider"></div>
+				<input id="radius-input-max" type="number" value="1">
+			</div>
+			<div id="settings-speed">
+				<span>Speed :</span>
+				<input id="speed-input-min" type="number" value="1">
+				<div id="speed-slider"></div>
+				<input id="speed-input-max" type="number" value="1">
 			</div>
 		</div>
 		
+		<script src="nouislider.min.js"></script>
 		<script src="balls.js"></script>
 		<script src="canvas.js"></script>
 		<script src="interface.js"></script>

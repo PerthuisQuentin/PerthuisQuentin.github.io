@@ -1,3 +1,12 @@
+/* OBJET PHYSIQUE */
+
+function physicalObject() {
+	var self = this;
+	var _boundary = new BoundaryPoint(0, 0);
+}
+
+/* BALLES */
+
 // Définition d'un objet représentant une balle
 function Ball(handler, canvas, context) {
 	var self = this;
@@ -44,7 +53,7 @@ function Ball(handler, canvas, context) {
 		_oldY = _boundary._y;
 		_direction = (Math.random() * 2 * Math.PI - Math.PI) * -1;
 		_speed = Math.floor(Math.random() * (handler.getSpeedMax() - handler.getSpeedMin())) + handler.getSpeedMin();
-		_color = "#0000FF"; //'#' + Math.floor(Math.random()*16777215).toString(16);
+		_color = '#' + Math.floor(Math.random()*16777215).toString(16);
 		_isOriginal = true;
 	};
 

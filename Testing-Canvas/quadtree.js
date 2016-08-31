@@ -1,7 +1,7 @@
 /* QUADTREE */
 
 // Objet de gestion des collisions
-function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
+function QuadTree(boundaryAABB, depth, maxObjects, maxDepth, ) {
 	var self = this;
 	var _objects = [];
 	var _nodes;
@@ -15,17 +15,6 @@ function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
 		if(_nodes !== undefined) {
 			for(var i in _nodes) {
 				_nodes[i].draw(context);
-			}
-		}
-	};
-
-	self.debug = function() {
-		var m = "";
-		for(var i = 0; i < _depth; i++) m += '\t';
-			console.log(m + _objects.length);
-		if(_nodes !== undefined) {
-			for(var i in _nodes) {
-				_nodes[i].debug();
 			}
 		}
 	};
@@ -54,12 +43,6 @@ function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
 	// Ajout un objet "boundary" au noeud
 	self.insert = function(physicalObject) {
 		// Si ce noeud a des noeuds enfants
-
-		if(self._boundary.contains(physicalObject.getBoundary()))
-			physicalObject.setColor("#00FF00");
-		else
-			physicalObject.setColor("#FF0000");
-
 		if(_nodes !== undefined) {
 			for(var i in _nodes) {
 
@@ -76,6 +59,13 @@ function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
 
 		if(_objects.length > maxObjects && _depth < maxDepth) {
 			subdivide();
+		}
+	};
+
+	// Mets à jour les objets
+	self.update = function() {
+		for(var i = _objects.length - 1; i >= 0; i--) {
+			// TODO : Need rework before
 		}
 	};
 }

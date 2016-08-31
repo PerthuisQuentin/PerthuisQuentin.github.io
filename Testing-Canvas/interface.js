@@ -244,6 +244,8 @@ function init() {
 	ballsCanvas.start();
 }
 
+var test = [];
+
 // Objet gérant le balls-canvas
 function BallsCanvas(canvas) {
 	var self = this;
@@ -251,33 +253,33 @@ function BallsCanvas(canvas) {
 	var _ballEngine = new BallEngine(self, canvas, _context);
 	var _started = false;
 
-	this.start = function() {
+	self.start = function() {
 		if(!_started) {
 			animate();
 			_started = true;
 		}
 	}
 
-	this.setDuplicationMode = function(state) {
+	self.setDuplicationMode = function(state) {
 		_ballEngine.setDuplicationMode(state);
 	};
 
-	this.setBallsAmount = function(amount) {
+	self.setBallsAmount = function(amount) {
 		_ballEngine.setBallsAmount(amount);
 	};
 
-	this.setBallsRadius = function(radiusMin, radiusMax) {
+	self.setBallsRadius = function(radiusMin, radiusMax) {
 		_ballEngine.setRadiusMin(radiusMin);
 		_ballEngine.setRadiusMax(radiusMax);
 	};
 
-	this.setBallsSpeed = function(speedMin, speedMax) {
+	self.setBallsSpeed = function(speedMin, speedMax) {
 		_ballEngine.setSpeedMin(speedMin);
 		_ballEngine.setSpeedMax(speedMax);
-	}
+	};
 	
 	// Redimensionne le canvas en fonction de la fenêtre
-	this.resizeCanvas = function() {
+	self.resizeCanvas = function() {
 		canvas.width = canvas.clientWidth;
 		canvas.height = canvas.clientHeight;
 	};
@@ -289,6 +291,10 @@ function BallsCanvas(canvas) {
 
 		_ballEngine.update();
 		_ballEngine.draw();
+
+		for(var i in test) {
+			test[i].draw(_context);
+		}
 
 		requestAnimationFrame(animate);
 	};

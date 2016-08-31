@@ -86,16 +86,14 @@ function BoundaryAABB(x, y, w, h) {
 
 	// Test si le rectangle contient un boundary donné
 	self.contains = function(boundary) {
-		switch(boundary.constructor) {
-    		case Point:
-        		return containsPoint(boundary);
-    		case BoundaryAABB:
-        		return containsAABB(boundary);
-        	case BoundaryCircle:
-        		return containsCircle(boundary);
-    		default:
-        		return false;
-		}
+		if(boundary instanceof BoundaryPoint)
+			return containsPoint(boundary);
+		else if(boundary instanceof BoundaryAABB)
+			return containsAABB(boundary);
+		else if(boundary instanceof BoundaryCircle)
+			return containsCircle(boundary);
+		else
+			return false;
 	};
 
 	// Test si le rectangle croise un rectangle donné
@@ -110,14 +108,12 @@ function BoundaryAABB(x, y, w, h) {
 
 	// Test si le rectangle croise un boundary donné
 	self.intersects = function(boundary) {
-		switch(boundary.constructor) {
-    		case BoundaryAABB:
-        		return intersectsAABB(boundary);
-        	case BoundaryCircle:
-        		return boundary.intersectsAABB(self);
-    		default:
-        		return false;
-		}
+		if(boundary instanceof BoundaryAABB)
+        	return intersectsAABB(boundary);
+       	else if(boundary instanceof BoundaryCircle)
+        	return boundary.intersects(self);
+    	else
+        	return false;
 	};
 }
 
@@ -170,16 +166,14 @@ function BoundaryCircle(x, y, r) {
 
 	// Test si le cercle contient un boundary donné
 	self.contains = function(boundary) {
-		switch(boundary.constructor) {
-    		case Point:
-        		return containsPoint(boundary);
-    		case BoundaryAABB:
-        		return containsAABB(boundary);
-        	case BoundaryCircle:
-        		return containsCircle(boundary);
-    		default:
-        		return false;
-		}
+		if(boundary instanceof BoundaryPoint)
+			return containsPoint(boundary);
+		else if(boundary instanceof BoundaryAABB)
+			return containsAABB(boundary);
+		else if(boundary instanceof BoundaryCircle)
+			return containsCircle(boundary);
+		else
+			return false;
 	};
 
 	// Test si le cercle croise un cercle donné
@@ -214,14 +208,14 @@ function BoundaryCircle(x, y, r) {
 
 		// Test d'un coin du rectangle présent dans le cercle
 		if(
-			self.containsPoint(boundaryAABB._x, boundaryAABB._y) ||
-			self.containsPoint(boundaryAABB._x + boundaryAABB._w, boundaryAABB._y) ||
-			self.containsPoint(boundaryAABB._x, boundaryAABB._y + boundaryAABB._h) ||
-			self.containsPoint(boundaryAABB._x + boundaryAABB._w, boundaryAABB._y + boundaryAABB._h)
+			containsPoint(boundaryAABB._x, boundaryAABB._y) ||
+			containsPoint(boundaryAABB._x + boundaryAABB._w, boundaryAABB._y) ||
+			containsPoint(boundaryAABB._x, boundaryAABB._y + boundaryAABB._h) ||
+			containsPoint(boundaryAABB._x + boundaryAABB._w, boundaryAABB._y + boundaryAABB._h)
 		) return true;
 
 		// Test du cercle contenu dans le rectangle
-		if(boundaryAABB.containsPoint(self._x, self._y)) return true;
+		if(boundaryAABB.contains(new BoundaryPoint(self._x, self._y))) return true;
 
 		// Test du cercle traversant un unique segment du rectangle
 		var verticalProjection = canProjectCenterOnSegment(boundaryAABB._x, boundaryAABB._y, boundaryAABB._x, boundaryAABB._y + boundaryAABB._h);
@@ -232,14 +226,12 @@ function BoundaryCircle(x, y, r) {
 
 	// Test si le cercle croise un boundary donné
 	self.intersects = function(boundary) {
-		switch(boundary.constructor) {
-    		case BoundaryAABB:
-        		return intersectsAABB(boundary);
-        	case BoundaryCircle:
-        		return intersectsCircle(self);
-    		default:
-        		return false;
-		}
+		if(boundary instanceof BoundaryAABB)
+        	return intersectsAABB(boundary);
+       	else if(boundary instanceof BoundaryCircle)
+        	return intersectsCircle(boundary);
+    	else
+        	return false;
 	};
 }
 

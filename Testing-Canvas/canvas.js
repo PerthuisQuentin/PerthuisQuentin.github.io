@@ -32,11 +32,20 @@ function BallEngine(handler, canvas, context) {
 	self.getSpeedMin = function() { return _speedMin; };
 	self.getSpeedMax = function() { return _speedMax; };
 
+	var quadtree;
+	//setInterval(function () { quadtree.debug(); } , 5000);
+
 	self.update = function() {
 		for(_i = _balls.length - 1; _i >= 0; _i--) {
 			_balls[_i].update();
 			verifyCollisionWithBorders(_balls[_i]);
 		}
+
+		quadtree = new QuadTree(new BoundaryAABB(0, 0, canvas.width, canvas.height), 0, 3, 3);
+		for(var i in _balls) {
+			quadtree.insert(_balls[i]);
+		}
+		quadtree.draw(context);
 	};
 
 	self.draw = function() {

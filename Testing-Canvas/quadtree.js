@@ -2,10 +2,11 @@
 
 // Objet de gestion des collisions
 function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
+	var self = this;
 	var _objects = [];
 	var _nodes;
 	var _depth = depth;
-	this._boundary = boundaryAABB;
+	self._boundary = boundaryAABB;
 
 	// Dessine le rectangle sur "context"
 	self.draw = function(context) {
@@ -16,30 +17,53 @@ function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
 				_nodes[i].draw(context);
 			}
 		}
-	};	
+	};
+
+	self.debug = function() {
+		var m = "";
+		for(var i = 0; i < _depth; i++) m += '\t';
+			console.log(m + _objects.length);
+		if(_nodes !== undefined) {
+			for(var i in _nodes) {
+				_nodes[i].debug();
+			}
+		}
+	};
 
 	// Divise le noeud en 4 noeud
 	var subdivide = function() {
 		var halfWidth = boundaryAABB._w / 2;
 		var halfHeight = boundaryAABB._h / 2;
 
-		var _nodes = [];
+		_nodes = [];
 		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x, boundaryAABB._y, halfWidth, halfHeight), _depth + 1, maxObjects, maxDepth));
 		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x + halfWidth, boundaryAABB._y, halfWidth, halfHeight), _depth + 1, maxObjects, maxDepth));
 		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x, boundaryAABB._y + halfHeight, halfWidth, halfHeight), _depth + 1, maxObjects, maxDepth));
 		_nodes.push(new QuadTree(new BoundaryAABB(boundaryAABB._x+ halfWidth, boundaryAABB._y + halfHeight, halfWidth, halfHeight), _depth + 1, maxObjects, maxDepth));
 
 		for(var i in _objects) {
-
+			for(var y in _nodes) {
+				if(_nodes[y]._boundary.intersects(_objects[i].getBoundary())) {
+					_nodes[y].insert(_objects[i]);
+				}	
+			}
 		}
+		_objects = [];
 	};
 
 	// Ajout un objet "boundary" au noeud
-	var insert = function(physicalObject) {
+	self.insert = function(physicalObject) {
 		// Si ce noeud a des noeuds enfants
+
+		if(self._boundary.contains(physicalObject.getBoundary()))
+			physicalObject.setColor("#00FF00");
+		else
+			physicalObject.setColor("#FF0000");
+
 		if(_nodes !== undefined) {
 			for(var i in _nodes) {
-				if(_nodes[i]._boundary.intersects(physicalObject._boundary)) {
+
+				if(_nodes[i]._boundary.intersects(physicalObject.getBoundary())) {
 					_nodes[i].insert(physicalObject);
 				}
 			}
@@ -52,15 +76,7 @@ function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
 
 		if(_objects.length > maxObjects && _depth < maxDepth) {
 			subdivide();
-
-			for(var i in _objects) {
-				for(var y in _nodes) {
-					if(_nodes[y]._boundary.intersects(_objects[i]._boundary)) {
-					_nodes[y].insert(_objects[i]);
-				}
-				}
-			}
 		}
-	}
+	};
 }
 

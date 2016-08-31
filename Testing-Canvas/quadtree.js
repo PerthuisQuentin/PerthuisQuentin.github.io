@@ -1,7 +1,7 @@
 /* QUADTREE */
 
 // Objet de gestion des collisions
-function QuadTree(boundaryAABB, depth, maxObjects, maxDepth, ) {
+function QuadTree(boundaryAABB, depth, maxObjects, maxDepth) {
 	var self = this;
 	var _objects = [];
 	var _nodes;

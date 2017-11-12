@@ -6,6 +6,11 @@ var targetRotationOnMouseDown = 0;
 var mouseX = 0;
 var mouseXOnMouseDown = 0;
 var windowHalfX = window.innerWidth / 2;
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+var lastMouse = new THREE.Vector2();
+var map;
+var selectedMesh;
 
 init();
 animate();
@@ -27,7 +32,7 @@ function init() {
 	var light = new THREE.PointLight( 0xffffff, 0.8 );
 	camera.add(light);
 
-	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -36,10 +41,14 @@ function init() {
 	
 	document.body.appendChild( renderer.domElement );
 	stats = new Stats();
-	document.body.appendChild( stats.dom );
-	window.addEventListener( 'resize', onWindowResize, false );
+	document.body.appendChild(stats.dom);
+	window.addEventListener('resize', onWindowResize, false);
 
-	var map = new HexagonalMap(7, 50, 5);
+	window.addEventListener('mousemove', onMouseMove, false);
+	window.addEventListener('mousedown', onMouseDown, false);
+	window.addEventListener('mouseup', onMouseUp, false);
+
+	map = new HexagonalMap(7, 50, 5);
 	TestMap = map;
 
 	//TestMap.testGrid();
@@ -79,6 +88,34 @@ function onWindowResize() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function onMouseMove(event) {
+	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onMouseDown(event) {
+	lastMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+	lastMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onMouseUp(event) {
+	var newX = (event.clientX / window.innerWidth) * 2 - 1;
+	var newY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	if(event.which === 1 && lastMouse.x === newX && lastMouse.y === newY) {
+		raycaster.setFromCamera(mouse, camera);
+		var intersects = raycaster.intersectObjects(map.getGroup().children);
+		if(intersects.length > 0) {
+			if(selectedMesh) {
+				selectedMesh.material.color.set(0x2E4053);
+			}
+			selectedMesh = intersects[0].object;
+			map.updateDisplay(selectedMesh.cubeCoordinates);
+			selectedMesh.material.color.set(0xff0000);
+		}
+	}
+}
+
 function animate() {
 	TWEEN.update();
 	requestAnimationFrame(animate);
@@ -87,5 +124,5 @@ function animate() {
 }
 
 function render() {
-	renderer.render( scene, camera );
+	renderer.render(scene, camera);
 }

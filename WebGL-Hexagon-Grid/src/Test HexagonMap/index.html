@@ -1,42 +1,45 @@
 <html>
-
-<head>
-	<title>My first three.js app</title>
-	<link rel="stylesheet" type="text/css" href="index.css">
-</head>
-
-<body>
-	<div id="buttons">
-		<span>Animation : </span>
-		<button id="startAnim">
-			Start
-		</button>
-	</div>
-	<div id="mapSize">
-		<span>Map : </span>
-		<button id="oneMore">
-			+1
-		</button>
-		<button id="oneLess">
-			-1
-		</button>
-	</div>
-	<div id="coordinates">
-		<span>Coordinates : </span>
-		<button id="coordinatesON">
-			ON
-		</button>
-		<button id="coordinatesOFF">
-			OFF
-		</button>
-	</div>
-
-	<script src="../../libs/three.js"></script>
-	<script src="../../libs/stats.min.js"></script>
-	<script src="../../libs/orbitControls.js"></script>
-	<script src="../../libs/tween.min.js"></script>
-	<script src="../hexagonalMap.js"></script>
-	<script src="index.js"></script>
-</body>
-
+	
+	<head>
+		<title>My first three.js app</title>
+		<link rel="stylesheet" type="text/css" href="index.css">
+	</head>
+	
+	<body>
+		<div id="buttons">
+			<span>Animation : </span>
+			<button id="startAnim">
+				Start
+			</button>
+		</div>
+		<div id="mapSize">
+			<span>Map : </span>
+			<button id="oneMore">
+				+1
+			</button>
+			<button id="oneLess">
+				-1
+			</button>
+		</div>
+		<div id="coordinates">
+			<span>Coordinates : </span>
+			<button id="coordinatesON">
+				ON
+			</button>
+			<button id="coordinatesOFF">
+				OFF
+			</button>
+		</div>
+		<span id="coordinatesOffset"></span>
+		<span id="coordinatesAxial"></span>
+		<span id="coordinatesCube"></span>
+	
+		<script src="../../libs/three.js"></script>
+		<script src="../../libs/stats.min.js"></script>
+		<script src="../../libs/orbitControls.js"></script>
+		<script src="../../libs/tween.min.js"></script>
+		<script src="../hexagonalMap.js"></script>
+		<script src="index.js"></script>	
+	</body>
+	
 </html>

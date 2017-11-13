@@ -24,7 +24,6 @@ function createHexagon(length) {
 function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     var map = {};
     var sceneTilesGroup = new THREE.Group();
-    var sceneCoordinatesGroup = new THREE.Group();
     this.getGroup = function() { return sceneTilesGroup; };
 
     var outerRadius = tileRadius + tileSpacing / 2;
@@ -33,18 +32,10 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     var tileHexagon = createHexagon(tileRadius);
     var extrudeSettings = { amount: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
     var tileGeometry = new THREE.ExtrudeGeometry(tileHexagon, extrudeSettings);
-    var font;
-    var red = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-    var blue = new THREE.MeshPhongMaterial({ color: 0x0000ff });
-    var green = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
 
     var offsetDisplay = document.getElementById('coordinatesOffset');
     var axialDisplay = document.getElementById('coordinatesAxial');
     var cubeDisplay = document.getElementById('coordinatesCube');
-
-    this.setFont = function(_font) {
-        font = _font;
-    };
     
     var initTile = function(x, y, z) {
         if(!map[x]) map[x] = {};
@@ -55,12 +46,6 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     };
 
     var removeTile = function(x, y, z) {
-        var mesh = map[x][y][z];
-        for(var i in mesh.customCoord) {
-            mesh.customCoord[i].geometry.dispose();
-            mesh.customCoord[i].material.dispose();
-            sceneCoordinatesGroup.remove(mesh.customCoord[i]);
-        }
         map[x][y][z].geometry.dispose();
         map[x][y][z].material.dispose();
         sceneTilesGroup.remove(map[x][y][z]);
@@ -113,37 +98,6 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
         mesh.cubeCoordinates = { x: a, y: b, z: c };
         mesh.customCoord = {};
         sceneTilesGroup.add(mesh);
-
-        var dist = 30;
-        if(b === false) dist = 15;
-
-        if(a !== false) {
-            var xGeom = new THREE.TextGeometry(a.toString(), font);
-            xGeom.center();
-            var xMesh = new THREE.Mesh(xGeom, blue);
-            xMesh.rotation.set(Math.PI / 2, Math.PI, 0);
-            xMesh.position.set(x + dist, 1, z);
-            mesh.customCoord.x = xMesh;
-            sceneCoordinatesGroup.add(xMesh);
-        }
-        if(b !== false) {
-            var yGeom = new THREE.TextGeometry(b.toString(), font);
-            yGeom.center();
-            var yMesh = new THREE.Mesh(yGeom, green);
-            yMesh.rotation.set(Math.PI / 2, Math.PI, 0);
-            yMesh.position.set(x, 1, z);
-            mesh.customCoord.y = yMesh;
-            sceneCoordinatesGroup.add(yMesh);
-        }
-        if(c !== false) {
-            var zGeom = new THREE.TextGeometry(c.toString(), font);
-            zGeom.center();
-            var zMesh = new THREE.Mesh(zGeom, red);
-            zMesh.rotation.set(Math.PI / 2, Math.PI, 0);
-            zMesh.position.set(x - dist, 1, z);
-            mesh.customCoord.z = zMesh;
-            sceneCoordinatesGroup.add(zMesh);
-        }
 
         return mesh;
     };

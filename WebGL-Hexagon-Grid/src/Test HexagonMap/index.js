@@ -51,33 +51,10 @@ function init() {
 	map = new HexagonalMap(7, 50, 5);
 	TestMap = map;
 
-	//TestMap.testGrid();
-	var loader = new THREE.FontLoader();
-	loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/helvetiker_regular.typeface.json', function(fontLoaded) {
-		var font = {
-			font: fontLoaded,
-			size: 20,
-			height: 1,
-			curveSegments: 2
-		};
-		TestMap.setFont(font);
+	TestMap.init();
 
-		TestMap.init();
-
-		document.getElementById('oneMore').addEventListener('click', function() {
-			TestMap.addRow();
-		});
-		document.getElementById('oneLess').addEventListener('click', function() {
-			TestMap.removeRow();
-		});
-
-		document.getElementById('coordinatesON').addEventListener('click', function() {
-			TestMap.enableCoordinates();
-		});
-		document.getElementById('coordinatesOFF').addEventListener('click', function() {
-			TestMap.disableCoordinates();
-		});
-	});
+	document.getElementById('oneMore').addEventListener('click', TestMap.addRow);
+	document.getElementById('oneLess').addEventListener('click', TestMap.removeRow);
 
 	scene.add(map.getGroup());
 }

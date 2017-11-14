@@ -37,15 +37,55 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     var axialDisplay = document.getElementById('coordinatesAxial');
     var cubeDisplay = document.getElementById('coordinatesCube');
     
-    var initTile = function(x, y, z) {
+    var animState = "visible";
+    var animations = {
+		appear: new TimelineLite().pause(),
+        disappear: new TimelineLite().pause(),
+        wave: new TimelineLite().pause()
+    };
+
+    var initTile = function(x, y, z, row) {
         if(!map[x]) map[x] = {};
         if(!map[x][y]) map[x][y] = {};
 
         var position = cubeToPosition(x, y, z);
-        map[x][y][z] = createTile(position.x, position.z, x, y, z);
+        map[x][y][z] = createTile(position.x, position.z, x, y, z, row);
+    };
+
+    var createTile = function(x, z, a, b, c, row) {
+        var mesh = new THREE.Mesh(tileGeometry, new THREE.MeshPhongMaterial({
+            color: 0x2E4053,
+            transparent: true,
+            opacity: 1
+        }));
+        animations.appear.fromTo(mesh.position, 1, { y: -100 }, { y: 10, ease: Elastic.easeOut.config(1, 0.3) }, row * 0.5);
+        animations.appear.fromTo(mesh.material, 1, { opacity: 0 }, { opacity: 1 }, row * 0.5);
+        animations.disappear.fromTo(mesh.position, 0.5, { y: 0 }, { y: -100 }, row * 0.2);
+        animations.disappear.fromTo(mesh.material, 0.5, { opacity: 1 }, { opacity: 0 }, row * 0.2);
+        animations.wave.fromTo(mesh.position, 0.5, { y: 0 }, { y: 20, ease: Power1.easeOut }, row * 0.2);
+        animations.wave.to(mesh.position, 0.5, { y: 0, ease: Power1.easeOut }, 0.5 + row * 0.2);
+        mesh.rotation.set(Math.PI / 2, 0, 0);
+        mesh.position.set(x, 0, z);
+        mesh.cubeCoordinates = { x: a, y: b, z: c };
+        mesh.customCoord = {};
+        if(animState == "visible") {
+            mesh.position.y = 0;
+            mesh.material.opacity = 1;
+        } else if(animState == "hidden") {
+            mesh.position.y = -100;
+            mesh.material.opacity = 0;
+        }
+        sceneTilesGroup.add(mesh);
+
+        return mesh;
     };
 
     var removeTile = function(x, y, z) {
+        animations.appear.remove(animations.appear.getTweensOf(map[x][y][z].position));
+        animations.appear.remove(animations.appear.getTweensOf(map[x][y][z].material));
+        animations.disappear.remove(animations.disappear.getTweensOf(map[x][y][z].position));
+        animations.disappear.remove(animations.disappear.getTweensOf(map[x][y][z].material));
+        animations.wave.remove(animations.wave.getTweensOf(map[x][y][z].position));
         map[x][y][z].geometry.dispose();
         map[x][y][z].material.dispose();
         sceneTilesGroup.remove(map[x][y][z]);
@@ -53,7 +93,7 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     };
 
     this.init = function() {
-        map[0] = { 0: { 0: createTile(0, 0, 0, 0, 0) } };
+        map[0] = { 0: { 0: createTile(0, 0, 0, 0, 0, 0) } };
         for(var i = 1; i <= mapRadius; i++) {
             forEachRow(i, initTile);
         }
@@ -68,13 +108,13 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     };
 
     var forEachRow = function(n, callback) {
-        callback(0, n, -n); callback(0, -n, n);
-        callback(n, 0, -n); callback(-n, 0, n);
-        callback(n, -n, 0); callback(-n, n, 0);
+        callback(0, n, -n, n); callback(0, -n, n, n);
+        callback(n, 0, -n, n); callback(-n, 0, n, n);
+        callback(n, -n, 0, n); callback(-n, n, 0, n);
         for(var i = 1; i < n; i++) {
-            callback(n, -i, i-n); callback(-n, i, n-i);
-            callback(-i, n, i-n); callback(i, -n, n-i);
-            callback(i-n, -i, n); callback(n-i, i, -n);
+            callback(n, -i, i-n, n); callback(-n, i, n-i, n);
+            callback(-i, n, i-n, n); callback(i, -n, n-i, n);
+            callback(i-n, -i, n, n); callback(n-i, i, -n, n);
         }
     }
 
@@ -85,21 +125,6 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
     this.removeRow = function() {
         if(mapRadius === 0) return;
         forEachRow(mapRadius--, removeTile);
-    };
-
-    var createTile = function(x, z, a, b, c) {
-        var mesh = new THREE.Mesh(tileGeometry, new THREE.MeshPhongMaterial({
-            color: 0x2E4053,
-            transparent: true,
-            opacity: 1
-        }));
-        mesh.rotation.set(Math.PI / 2, 0, 0);
-        mesh.position.set(x, -2, z);
-        mesh.cubeCoordinates = { x: a, y: b, z: c };
-        mesh.customCoord = {};
-        sceneTilesGroup.add(mesh);
-
-        return mesh;
     };
 
     var offsetToPosition = function(x, z) {
@@ -139,5 +164,14 @@ function HexagonalMap(mapRadius, tileRadius, tileSpacing) {
         offsetDisplay.innerHTML = offset.x + ' / ' + offset.z;
         axialDisplay.innerHTML = axial.x + ' / ' + axial.z;
         cubeDisplay.innerHTML = coordinates.x + ' / ' + coordinates.y + ' / ' + coordinates.z;
+    };
+
+    this.launchAnim = function(anim) {
+        if(anim == "appear") {
+            animState = "visible";
+        } else if(anim == "disappear") {
+            animState = "hidden";
+        }
+        animations[anim].restart();
     };
 }

@@ -56,6 +56,12 @@ function init() {
 	document.getElementById('oneMore').addEventListener('click', TestMap.addRow);
 	document.getElementById('oneLess').addEventListener('click', TestMap.removeRow);
 
+	var animSelect = document.getElementById("animation");
+	document.getElementById('startAnim').addEventListener('click', function() {
+		var selection = animSelect.options[animSelect.selectedIndex].value;
+		TestMap.launchAnim(selection);
+	});
+
 	scene.add(map.getGroup());
 }
 
@@ -94,7 +100,6 @@ function onMouseUp(event) {
 }
 
 function animate() {
-	TWEEN.update();
 	requestAnimationFrame(animate);
 	render();
 	stats.update();

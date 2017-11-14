@@ -6,8 +6,13 @@
 	</head>
 	
 	<body>
-		<div id="buttons">
+		<div id="anims">
 			<span>Animation : </span>
+			<select id="animation">
+				<option value="appear">Appear</option>
+				<option value="disappear">Disappear</option>
+				<option value="wave">Wave</option>
+			</select>
 			<button id="startAnim">
 				Start
 			</button>
@@ -28,7 +33,9 @@
 		<script src="../../libs/three.js"></script>
 		<script src="../../libs/stats.min.js"></script>
 		<script src="../../libs/orbitControls.js"></script>
-		<script src="../../libs/tween.min.js"></script>
+		<script src="../../libs/TweenLite.min.js"></script>
+		<script src="../../libs/TimelineLite.min.js"></script>
+		<script src="../../libs/EasePack.min.js"></script>		
 		<script src="../hexagonalMap.js"></script>
 		<script src="index.js"></script>	
 	</body>
